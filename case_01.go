@@ -5,6 +5,7 @@ import "fmt"
 import "sort"
 import "time"
 import "math"
+import "os"
 
 func main() {
 
@@ -233,8 +234,25 @@ func main() {
     }
 
     //-----------------------------------
+
+    fruits := []string{"peach", "banana", "kiwi"}
+    sort.Sort(ByLength(fruits))
+    fmt.Println(fruits)
+
     //-----------------------------------
+
+    panic("a problem")
+    _, err := os.Create("/tmp/file")
+    if err != nil {
+        panic(err)
+    }
+
     //-----------------------------------
+
+    f := createFile("/tmp/defer.txt")
+    defer closeFile(f)
+    writeFile(f)
+    
     //-----------------------------------
     //-----------------------------------
     //-----------------------------------
@@ -371,4 +389,32 @@ func f2(arg int) (int, error) {
     	return -1, &argError{arg, "can't work with it"}
     }
     return arg + 3, nil
+}
+
+type ByLength []string
+func (s ByLength) Len() int {
+    return len(s)
+}
+func (s ByLength) Swap(i, j int) {
+    s[i], s[j] = s[j], s[i]
+}
+func (s ByLength) Less(i, j int) bool {
+    return len(s[i]) < len(s[j])
+}
+
+func createFile(p string) *os.File {
+    fmt.Println("creating")
+    f, err := os.Create(p)
+    if err != nil {
+        panic(err)
+    }
+    return f
+}
+func writeFile(f *os.File) {
+    fmt.Println("writing")
+    fmt.Fprintln(f, "data")
+}
+func closeFile(f *os.File) {
+    fmt.Println("closing")
+    f.Close()
 }
