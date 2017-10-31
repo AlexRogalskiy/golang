@@ -1,2 +1,2 @@
 # golang
-Go lang showcase
+Golang showcase
